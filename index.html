@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<!-- PWA Manifest -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#ff6600">
+  <meta charset="UTF-8">
+  <title>附近美食</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+    #map {
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApaooqQ0h14XPRRNGdzGLwyb9eCDHvwHg&libraries=places"></script>
+<script>
+navigator.geolocation.getCurrentPosition(
+  function (position) {
+
+    const userLocation = {
+      lat: position.coords.latitude,
+      lng: position.coords.longitude
+    };
+
+    const map = new google.maps.Map(document.getElementById("map"), {
+      center: userLocation,
+      zoom: 15
+    });
+
+    // 使用者位置
+    new google.maps.Marker({
+      position: userLocation,
+      map: map,
+      title: "你在這裡",
+      icon: "https://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+    });
+
+    const service = new google.maps.places.PlacesService(map);
+
+    service.nearbySearch(
+      {
+        location: userLocation,
+        radius: 1000,
+        type: ["restaurant"]
+      },
+      function (results, status) {
+
+        if (status !== google.maps.places.PlacesServiceStatus.OK) return;
+
+        results.forEach(function (place) {
+
+          const marker = new google.maps.Marker({
+            position: place.geometry.location,
+            map: map,
+            title: place.name
+          });
+
+          const info = new google.maps.InfoWindow();
+
+          marker.addListener("click", function () {
+
+            // 計算距離（公尺）
+            const lat1 = userLocation.lat * Math.PI / 180;
+            const lng1 = userLocation.lng * Math.PI / 180;
+            const lat2 = place.geometry.location.lat() * Math.PI / 180;
+            const lng2 = place.geometry.location.lng() * Math.PI / 180;
+
+            const R = 6371000; // 地球半徑 (公尺)
+            const dLat = lat2 - lat1;
+            const dLng = lng2 - lng1;
+
+            const a = Math.sin(dLat/2)**2 + Math.cos(lat1)*Math.cos(lat2)*Math.sin(dLng/2)**2;
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            const distance = Math.round(R * c); // 公尺
+
+            const googleMapLink =
+              `https://www.google.com/maps/place/?q=place_id:${place.place_id}`;
+
+            const content = `
+              <strong>${place.name}</strong><br>
+              距離你約 ${distance} 公尺<br>
+              <a href="${googleMapLink}" target="_blank">在 Google 地圖上查看</a>
+            `;
+
+            info.setContent(content);
+            info.open(map, marker);
+
+          });
+        });
+      }
+    );
+  },
+  function () {
+    alert("請允許定位，才能顯示附近美食");
+  }
+);
+</script></body>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./service-worker.js')
+  .then(function(registration) {
+    console.log('ServiceWorker 註冊成功: ', registration.scope);
+  }).catch(function(err) {
+    console.log('ServiceWorker 註冊失敗: ', err);
+  });
+}
+</script></html>
