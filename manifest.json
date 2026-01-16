@@ -1,9 +1,0 @@
-{
-  "name": "附近美食",
-  "short_name": "美食",
-  "description": "快速找到你附近的餐廳",
-  "start_url": "/nearby-food/index.html",
-  "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#ff6600"
-}
