@@ -5,7 +5,7 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#ff6600">
   <meta charset="UTF-8">
-  <title>ªşªñ¬ü­¹</title>
+  <title>é™„è¿‘ç¾é£Ÿ</title>
   <style>
     html, body {
       margin: 0;
@@ -37,11 +37,11 @@ navigator.geolocation.getCurrentPosition(
       zoom: 15
     });
 
-    // ¨Ï¥ÎªÌ¦ì¸m
+    // ä½¿ç”¨è€…ä½ç½®
     new google.maps.Marker({
       position: userLocation,
       map: map,
-      title: "§A¦b³o¸Ì",
+      title: "ä½ åœ¨é€™è£¡",
       icon: "https://maps.google.com/mapfiles/ms/icons/blue-dot.png"
     });
 
@@ -69,27 +69,27 @@ navigator.geolocation.getCurrentPosition(
 
           marker.addListener("click", function () {
 
-            // ­pºâ¶ZÂ÷¡]¤½¤Ø¡^
+            // è¨ˆç®—è·é›¢ï¼ˆå…¬å°ºï¼‰
             const lat1 = userLocation.lat * Math.PI / 180;
             const lng1 = userLocation.lng * Math.PI / 180;
             const lat2 = place.geometry.location.lat() * Math.PI / 180;
             const lng2 = place.geometry.location.lng() * Math.PI / 180;
 
-            const R = 6371000; // ¦a²y¥b®| (¤½¤Ø)
+            const R = 6371000; // åœ°çƒåŠå¾‘ (å…¬å°º)
             const dLat = lat2 - lat1;
             const dLng = lng2 - lng1;
 
             const a = Math.sin(dLat/2)**2 + Math.cos(lat1)*Math.cos(lat2)*Math.sin(dLng/2)**2;
             const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            const distance = Math.round(R * c); // ¤½¤Ø
+            const distance = Math.round(R * c); // å…¬å°º
 
             const googleMapLink =
               `https://www.google.com/maps/place/?q=place_id:${place.place_id}`;
 
             const content = `
               <strong>${place.name}</strong><br>
-              ¶ZÂ÷§A¬ù ${distance} ¤½¤Ø<br>
-              <a href="${googleMapLink}" target="_blank">¦b Google ¦a¹Ï¤W¬d¬İ</a>
+              è·é›¢ä½ ç´„ ${distance} å…¬å°º<br>
+              <a href="${googleMapLink}" target="_blank">åœ¨ Google åœ°åœ–ä¸ŠæŸ¥çœ‹</a>
             `;
 
             info.setContent(content);
@@ -101,7 +101,7 @@ navigator.geolocation.getCurrentPosition(
     );
   },
   function () {
-    alert("½Ğ¤¹³\©w¦ì¡A¤~¯àÅã¥Üªşªñ¬ü­¹");
+    alert("è«‹å…è¨±å®šä½ï¼Œæ‰èƒ½é¡¯ç¤ºé™„è¿‘ç¾é£Ÿ");
   }
 );
 </script></body>
@@ -109,9 +109,9 @@ navigator.geolocation.getCurrentPosition(
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./service-worker.js')
   .then(function(registration) {
-    console.log('ServiceWorker µù¥U¦¨¥\: ', registration.scope);
+    console.log('ServiceWorker è¨»å†ŠæˆåŠŸ: ', registration.scope);
   }).catch(function(err) {
-    console.log('ServiceWorker µù¥U¥¢±Ñ: ', err);
+    console.log('ServiceWorker è¨»å†Šå¤±æ•—:  ', err);
   });
 }
 </script></html>
